@@ -21,8 +21,10 @@
 #define _GNU_SOURCE
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
+#include <libopencm3/cm3/systick.h>
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
 
 #include "settings.h"
 
@@ -36,6 +38,7 @@ char data_temp[66];
 #ifdef DEBUG
 #include <libopencm3/stm32/usart.h>
 void print(const char *s);
+inline void processData(uint32_t len);
 
 static void usart_setup(void)
 {
@@ -43,7 +46,7 @@ static void usart_setup(void)
     usart_set_baudrate(USART1, 38400);
     usart_set_databits(USART1, 8);
     usart_set_parity(USART1, USART_PARITY_NONE);
-    usart_set_stopbits(USART1, USART_CR2_STOP_1_0BIT);
+    usart_set_stopbits(USART1, USART_STOPBITS_1);
     usart_set_mode(USART1, USART_MODE_TX);
     usart_set_flow_control(USART1, USART_FLOWCONTROL_NONE);
     
@@ -126,11 +129,12 @@ uint16_t moist_sensor1(){
 static void clock_setup(void)
 {
     //rcc_clock_setup_in_hsi_out_48mhz();
-    
+        rcc_clock_setup_in_hse_8mhz_out_72mhz();
 	/* Enable GPIOC clock for LED & USARTs. */
 	rcc_periph_clock_enable(RCC_GPIOB);
 	rcc_periph_clock_enable(RCC_GPIOA);
-
+	rcc_periph_clock_enable(RCC_GPIOC);
+        rcc_periph_clock_enable(RCC_AFIO);
 	/* Enable clocks for USART1. */
 	rcc_periph_clock_enable(RCC_USART1);
 }
@@ -138,16 +142,45 @@ static void clock_setup(void)
 static void gpio_setup(void)
 {
 	// Setup GPIO pin GPIO8/9 on GPIO port C for LEDs.
-	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO8 | GPIO9);
-    
+	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO8 | GPIO9);
+        gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL ,GPIO13);
+        
     // Setup GPIO pin GPIO2 on GPIO port A for Sensor PWR.
     //gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2);
 
     // Setup GPIO pins for USART2 transmit.
-    gpio_mode_setup(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
+    gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ,GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO6);
+    //gpio_set_mode(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
     
     // Setup USART1 TX pin as alternate function.
-    gpio_set_af(GPIOB, GPIO_AF0, GPIO6);
+    //gpio_set_af(GPIOB, GPIO_AF0, GPIO6);
+    
+    //gpio_clear(GPIOC, GPIO13); /* Switch on LED. */
+}
+
+
+void systick_setup () {
+    /* 72MHz / 8 => 9000000 counts per second. */
+    systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
+
+    /* 9000000/9000 = 1000 overflows per second - every 1ms one interrupt */
+    /* SysTick interrupt every N clock pulses: set reload to N-1 */
+    systick_set_reload(8999);
+
+    systick_interrupt_enable();
+
+    /* Start counting. */
+    systick_counter_enable();
+}
+
+static uint32_t ticks;
+
+extern void sys_tick_handler () {
+    ++ticks;
+}
+
+uint32_t millis () {
+    return ticks;
 }
 
 /**
@@ -301,6 +334,7 @@ int main(void)
     // SETUP
     print("Starting Ebeko Node\n");
 #endif
+systick_setup ();
     
 #ifdef ADC_1
     adc_setup();
@@ -311,7 +345,7 @@ int main(void)
 	while (1) {
         // Toggle the LED (PA9) on the board every loop.
 		gpio_toggle(GPIOA, GPIO9);	// LED on/off
-        
+                gpio_toggle(GPIOC, GPIO13); /* LED on/off */
         
         incrementPacketCount();
         

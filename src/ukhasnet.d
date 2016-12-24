@@ -1,46 +1,31 @@
 ukhasnet.o: ukhasnet.c ../libopencm3//include/libopencm3/stm32/rcc.h \
  ../libopencm3//include/libopencm3/cm3/common.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/lib/gcc/arm-none-eabi/5.3.1/include/stdint.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/stdint.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/machine/_default_types.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/features.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/_newlib_version.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/_intsup.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/_stdint.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/lib/gcc/arm-none-eabi/5.3.1/include/stdbool.h \
+ /usr/lib/gcc/arm-none-eabi/4.8/include/stdint.h \
+ /usr/include/newlib/stdint.h \
+ /usr/include/newlib/machine/_default_types.h \
+ /usr/include/newlib/sys/features.h \
+ /usr/lib/gcc/arm-none-eabi/4.8/include/stdbool.h \
  ../libopencm3//include/libopencm3/stm32/memorymap.h \
- ../libopencm3//include/libopencm3/stm32/f0/memorymap.h \
+ ../libopencm3//include/libopencm3/stm32/f1/memorymap.h \
  ../libopencm3//include/libopencm3/cm3/memorymap.h \
- ../libopencm3//include/libopencm3/stm32/f0/rcc.h \
+ ../libopencm3//include/libopencm3/stm32/f1/rcc.h \
  ../libopencm3//include/libopencm3/stm32/common/rcc_common_all.h \
  ../libopencm3//include/libopencm3/stm32/gpio.h \
- ../libopencm3//include/libopencm3/stm32/f0/gpio.h \
- ../libopencm3//include/libopencm3/stm32/common/gpio_common_f24.h \
- ../libopencm3//include/libopencm3/stm32/common/gpio_common_f234.h \
+ ../libopencm3//include/libopencm3/stm32/f1/gpio.h \
  ../libopencm3//include/libopencm3/stm32/common/gpio_common_all.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/stdio.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/_ansi.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/newlib.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/config.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/machine/ieeefp.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/cdefs.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/lib/gcc/arm-none-eabi/5.3.1/include/stddef.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/lib/gcc/arm-none-eabi/5.3.1/include/stdarg.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/reent.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/_ansi.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/_types.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/machine/_types.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/lock.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/types.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/machine/types.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/select.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/_sigset.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/_timeval.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/timespec.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/_timespec.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/stdio.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/string.h \
- /usr/local/Cellar/arm-none-eabi-gcc/5.0-2016-q1-update/arm-none-eabi/include/sys/string.h \
- settings.h rfm69.h ../libopencm3//include/libopencm3/stm32/usart.h \
- ../libopencm3//include/libopencm3/stm32/f0/usart.h \
- ../libopencm3//include/libopencm3/stm32/common/usart_common_v2.h
+ ../libopencm3//include/libopencm3/cm3/systick.h \
+ /usr/include/newlib/stdio.h /usr/include/newlib/_ansi.h \
+ /usr/include/newlib/newlib.h /usr/include/newlib/sys/config.h \
+ /usr/include/newlib/machine/ieeefp.h /usr/include/newlib/sys/cdefs.h \
+ /usr/lib/gcc/arm-none-eabi/4.8/include/stddef.h \
+ /usr/lib/gcc/arm-none-eabi/4.8/include/stdarg.h \
+ /usr/include/newlib/sys/reent.h /usr/include/newlib/_ansi.h \
+ /usr/include/newlib/sys/_types.h /usr/include/newlib/machine/_types.h \
+ /usr/include/newlib/sys/lock.h /usr/include/newlib/sys/types.h \
+ /usr/include/newlib/machine/types.h /usr/include/newlib/sys/stdio.h \
+ /usr/include/newlib/string.h /usr/include/newlib/sys/string.h \
+ /usr/include/newlib/errno.h /usr/include/newlib/sys/errno.h settings.h \
+ rfm69.h ../libopencm3//include/libopencm3/stm32/usart.h \
+ ../libopencm3//include/libopencm3/stm32/f1/usart.h \
+ ../libopencm3//include/libopencm3/stm32/common/usart_common_f124.h \
+ ../libopencm3//include/libopencm3/stm32/common/usart_common_all.h

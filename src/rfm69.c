@@ -51,22 +51,34 @@ bool rf69_init(void)
 {
     uint8_t i;
     
+//    rcc_periph_clock_enable(R_RCC_SPI);
     rcc_periph_clock_enable(R_RCC_SPI);
     rcc_periph_clock_enable(R_RCC_GPIO);
-    gpio_mode_setup(SPI_PORT, GPIO_MODE_AF, GPIO_PUPD_NONE, R_SPI_PINS);
-    gpio_set_af(SPI_PORT, R_SPI_AFn, R_SPI_PINS);
-    gpio_mode_setup(SPI_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, SPI_SS);
-    
+        gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_10_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO4);
+        gpio_set(GPIOA, GPIO4);
+    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,GPIO_SPI1_SCK|GPIO_SPI1_MISO|GPIO_SPI1_MOSI);
+    //gpio_set_af(SPI_PORT, R_SPI_AFn, R_SPI_PINS);
+    //gpio_mode_setup(SPI_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, SPI_SS);
+
+
     // Reset and enable the SPI periph
     spi_reset(R_SPI);
+/*
     spi_init_master(R_SPI, SPI_CR1_BAUDRATE_FPCLK_DIV_64,
                     SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
                     SPI_CR1_CPHA_CLK_TRANSITION_1,
                     SPI_CR1_CRCL_8BIT,
                     SPI_CR1_MSBFIRST);
-    
+*/
+        spi_set_master_mode(R_SPI);
+        spi_set_baudrate_prescaler(R_SPI, SPI_CR1_BR_FPCLK_DIV_8);
+        spi_enable_software_slave_management(R_SPI);
+        spi_set_nss_high(R_SPI);
+        spi_enable(R_SPI);    
+
+  
     // Trigger an RXNE event when we have 8 bits (one byte) in the buffer
-    spi_fifo_reception_threshold_8bit(R_SPI);
+    //spi_fifo_reception_threshold_8bit(R_SPI);
     
     // NSS must be set high for the peripheral to function
     spi_enable_software_slave_management(R_SPI);
@@ -101,17 +113,19 @@ bool rf69_init(void)
  * @param reg The register address to be read
  * @returns The value of the register
  */
+
+
 uint8_t rf69_spiRead(const uint8_t reg)
 {
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_clear(SPI_PORT, SPI_SS);
-    spi_send8(R_SPI, reg);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, reg);
+    spi_read(R_SPI);
     // Wait until send FIFO is empty
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
-    spi_send8(R_SPI, 0x0);
+    spi_send(R_SPI, 0x0);
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
-    uint8_t out = spi_read8(R_SPI);
+    uint8_t out = spi_read(R_SPI);
     gpio_set(SPI_PORT, SPI_SS);
     return out;
 }
@@ -127,12 +141,12 @@ void rf69_spiWrite(const uint8_t reg, const uint8_t val)
 {
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_clear(SPI_PORT, SPI_SS);
-    spi_send8(R_SPI, reg | RFM69_SPI_WRITE_MASK);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, reg | RFM69_SPI_WRITE_MASK);
+    spi_read(R_SPI);
     // Wait until send FIFO is empty
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
-    spi_send8(R_SPI, val);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, val);
+    spi_read(R_SPI);
     // Wait until send FIFO is empty
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_set(SPI_PORT, SPI_SS);
@@ -149,15 +163,15 @@ void rf69_spiBurstRead(const uint8_t reg, uint8_t* dest, uint8_t len)
 {
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_clear(SPI_PORT, SPI_SS);
-    spi_send8(R_SPI, reg & 0x7F);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, reg & 0x7F);
+    spi_read(R_SPI);
     // Wait until send FIFO is empty
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     while(len--)
     {
-        spi_send8(R_SPI, 0x0);
+        spi_send(R_SPI, 0x0);
         while(SPI_SR(R_SPI) & SPI_SR_BSY);
-        *dest++ = spi_read8(R_SPI);
+        *dest++ = spi_read(R_SPI);
     }
     gpio_set(SPI_PORT, SPI_SS);
 }
@@ -172,14 +186,14 @@ void rf69_spiBurstWrite(uint8_t reg, const uint8_t* src, uint8_t len)
 {
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_clear(SPI_PORT, SPI_SS);
-    spi_send8(R_SPI, reg | RFM69_SPI_WRITE_MASK);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, reg | RFM69_SPI_WRITE_MASK);
+    spi_read(R_SPI);
     // Wait until send FIFO is empty
     while(len--)
     {
         while(SPI_SR(R_SPI) & SPI_SR_BSY);
-        spi_send8(R_SPI, *src++);
-        spi_read8(R_SPI);
+        spi_send(R_SPI, *src++);
+        spi_read(R_SPI);
     }
     // Wait until send FIFO is empty
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
@@ -196,17 +210,17 @@ void rf69_spiFifoWrite(const uint8_t* src, uint8_t len)
     
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_clear(SPI_PORT, SPI_SS);
-    spi_send8(R_SPI, RFM69_REG_00_FIFO | RFM69_SPI_WRITE_MASK);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, RFM69_REG_00_FIFO | RFM69_SPI_WRITE_MASK);
+    spi_read(R_SPI);
     // Wait until send FIFO is empty
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
-    spi_send8(R_SPI, len);
-    spi_read8(R_SPI);
+    spi_send(R_SPI, len);
+    spi_read(R_SPI);
     while(len--)
     {
         while(SPI_SR(R_SPI) & SPI_SR_BSY);
-        spi_send8(R_SPI, *src++);
-        spi_read8(R_SPI);
+        spi_send(R_SPI, *src++);
+        spi_read(R_SPI);
     }
     while(SPI_SR(R_SPI) & SPI_SR_BSY);
     gpio_set(SPI_PORT, SPI_SS);

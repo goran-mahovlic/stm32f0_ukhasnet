@@ -1,4 +1,3 @@
-##
 ## This file is part of the libopencm3 project.
 ##
 ## Copyright (C) 2009 Uwe Hermann <uwe@hermann-uwe.de>
@@ -18,27 +17,26 @@
 ## along with this library.  If not, see <http://www.gnu.org/licenses/>.
 ##
 
-LIBNAME		= opencm3_stm32f0
-DEFS		+= -DSTM32F0
+LIBNAME		= opencm3_stm32f1
+DEFS		+= -DSTM32F1
 
 FP_FLAGS	?= -msoft-float
-ARCH_FLAGS	= -mthumb -mcpu=cortex-m0 $(FP_FLAGS)
+ARCH_FLAGS	= -mthumb -mcpu=cortex-m3 $(FP_FLAGS) -mfix-cortex-m3-ldrd
 
 ################################################################################
 # OpenOCD specific variables
 
 OOCD		?= openocd
 OOCD_INTERFACE	?= flossjtag
-OOCD_BOARD	?= olimex_stm32_h103
+OOCD_TARGET	?= stm32f1x
 
 ################################################################################
 # Black Magic Probe specific variables
 # Set the BMP_PORT to a serial port and then BMP is used for flashing
-BMP_PORT	?=
+BMP_PORT	?= /dev/cu.usbmodemD5D4C5E1
 
 ################################################################################
 # texane/stlink specific variables
 #STLINK_PORT	?= :4242
-
 
 include ../Makefile.rules
