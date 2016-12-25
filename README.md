@@ -3,22 +3,19 @@
 ### Pre-requisites
 #### Hardware
 First options:
-* STM32F0308-Discovery Dev Board
+* STM32F103C8T6 developed board (bluepill)
 * RFM69HW/W on a Breakout board
 * USB/Serial for Debuging
-
-Second option:
-* Ebeko3 PCB (STM32F030K6T6 + RFM69HW)
-* STlink (i.e. STM32F0308-Discovery Dev Board with jumpers removed and SWD pins linked)
+* STlink or Black magic probe
 
 #### Software
 * arm-none-eabi-gcc (on OSX you can use homebrew and https://github.com/ARMmbed/homebrew-formulae)
 * stlink (https://github.com/texane/stlink)
 
 ### Install
-1. git clone https://github.com/jamescoxon/stm32f0_ukhasnet.git
-2. cd stm32f0_ukhasnet 
-3. mv src/settings-example.h src/settings.h
+1. git clone https://github.com/goran-mahovlic/stm32f0_ukhasnet.git
+2. cd stm32f0_ukhasnet
+3. mv src/settings-example.h src/settings.h   <<  edit your settings to suit your node
 4. git submodule init
 5. git submodule update
 6. cd libopencm3/
@@ -39,3 +36,5 @@ Second option:
 | `PA6` | `(SPI_MISO)`  | SPI MISO                          |
 | `PA5` | `(SPI_SCK)`   | SPI SCK                           |
 | `PA9` | `(LED)`       | LED                               |
+|`PC13` | `(LED)`       | onboard LED                       |
+  
