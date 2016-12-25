@@ -1,7 +1,7 @@
 //NODE SPECIFIC DETAILS - need to be changed
 #define NUM_REPEATS			5
-#define NODE_ID				"CRZGGO1"
-#define LOCATION_STRING		"16.000,4.0000"
+#define NODE_ID				"YourNode"
+#define LOCATION_STRING		"0.000,0.0000"
 #define POWER_OUTPUT		20				// Output power in dbmW
 #define TX_GAP			150				// Milliseconds between tx = tx_gap * 100, therefore 1000 = 100 seconds
 #define MAX_TX_CHARS		32				// Maximum chars which can be transmitted in a single packet

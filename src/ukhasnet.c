@@ -39,6 +39,9 @@ char data_temp[66];
 #include <libopencm3/stm32/usart.h>
 void print(const char *s);
 inline void processData(uint32_t len);
+void systick_setup (void);
+extern void sys_tick_handler (void);
+uint32_t millis (void);
 
 static void usart_setup(void)
 {
@@ -141,25 +144,16 @@ static void clock_setup(void)
 
 static void gpio_setup(void)
 {
-	// Setup GPIO pin GPIO8/9 on GPIO port C for LEDs.
-	gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO8 | GPIO9);
-        gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL ,GPIO13);
-        
-    // Setup GPIO pin GPIO2 on GPIO port A for Sensor PWR.
-    //gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO2);
+    // Setup GPIO pin GPIO8/9 on GPIO port C for LEDs.
+    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO8 | GPIO9);
+    gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL ,GPIO13);
 
     // Setup GPIO pins for USART2 transmit.
     gpio_set_mode(GPIOB, GPIO_MODE_OUTPUT_50_MHZ,GPIO_CNF_OUTPUT_ALTFN_PUSHPULL, GPIO6);
-    //gpio_set_mode(GPIOB, GPIO_MODE_AF, GPIO_PUPD_NONE, GPIO6);
-    
-    // Setup USART1 TX pin as alternate function.
-    //gpio_set_af(GPIOB, GPIO_AF0, GPIO6);
-    
-    //gpio_clear(GPIOC, GPIO13); /* Switch on LED. */
 }
 
 
-void systick_setup () {
+void systick_setup (void) {
     /* 72MHz / 8 => 9000000 counts per second. */
     systick_set_clocksource(STK_CSR_CLKSOURCE_AHB_DIV8);
 
@@ -179,7 +173,7 @@ extern void sys_tick_handler () {
     ++ticks;
 }
 
-uint32_t millis () {
+uint32_t millis (void) {
     return ticks;
 }
 

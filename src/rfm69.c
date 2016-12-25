@@ -54,31 +54,22 @@ bool rf69_init(void)
 //    rcc_periph_clock_enable(R_RCC_SPI);
     rcc_periph_clock_enable(R_RCC_SPI);
     rcc_periph_clock_enable(R_RCC_GPIO);
-        gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_10_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO4);
-        gpio_set(GPIOA, GPIO4);
+    gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_10_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO4);
+    gpio_set(GPIOA, GPIO4);
     gpio_set_mode(GPIOA, GPIO_MODE_OUTPUT_50_MHZ,GPIO_CNF_OUTPUT_ALTFN_PUSHPULL,GPIO_SPI1_SCK|GPIO_SPI1_MISO|GPIO_SPI1_MOSI);
-    //gpio_set_af(SPI_PORT, R_SPI_AFn, R_SPI_PINS);
-    //gpio_mode_setup(SPI_PORT, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, SPI_SS);
 
 
     // Reset and enable the SPI periph
     spi_reset(R_SPI);
-/*
-    spi_init_master(R_SPI, SPI_CR1_BAUDRATE_FPCLK_DIV_64,
-                    SPI_CR1_CPOL_CLK_TO_0_WHEN_IDLE,
-                    SPI_CR1_CPHA_CLK_TRANSITION_1,
-                    SPI_CR1_CRCL_8BIT,
-                    SPI_CR1_MSBFIRST);
-*/
-        spi_set_master_mode(R_SPI);
-        spi_set_baudrate_prescaler(R_SPI, SPI_CR1_BR_FPCLK_DIV_8);
-        spi_enable_software_slave_management(R_SPI);
-        spi_set_nss_high(R_SPI);
-        spi_enable(R_SPI);    
+    spi_set_master_mode(R_SPI);
+    spi_set_baudrate_prescaler(R_SPI, SPI_CR1_BR_FPCLK_DIV_8);
+    spi_enable_software_slave_management(R_SPI);
+    spi_set_nss_high(R_SPI);
+    spi_enable(R_SPI);    
 
   
     // Trigger an RXNE event when we have 8 bits (one byte) in the buffer
-    //spi_fifo_reception_threshold_8bit(R_SPI);
+    //spi_fifo_reception_threshold_8bit(R_SPI);  // from old code did not find how to do it in new one
     
     // NSS must be set high for the peripheral to function
     spi_enable_software_slave_management(R_SPI);
